@@ -1,28 +1,51 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import React,{ Component} from "react";
+import { 
+  View,
+  Text,
+  StyleSheet, 
+  Button,
+} from "react-native";
 
 
 
+class LoginScreen extends Component{
 
-export default class LoginScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Login',
-  };
+   signInWithGoogleAsync = async () => {
+    try {
+      const result = await Expo.Google.logInAsync({
+        behaviour: 'web',
+        androidClientId: 515118838508-mqkj98g3j7neghob66nmeuu7ikvev2nv.apps.googleusercontent.com,
+        //iosClientId: YOUR_CLIENT_ID_HERE,
+        scopes: ['profile', 'email'],
+      });
 
-  render() {
-    return (
-      <ScrollView style={styles.container}>
-        <Text>TESTE</Text>
-      </ScrollView>
-        
-    );
+      if (result.type === 'success') {
+        return result.accessToken;
+      } else {
+        return {cancelled: true};
+      }
+    } catch(e) {
+      return {error: true};
+    }
+  }
+
+
+
+  render(){
+    <View style={styles.container}>
+    <Button title="Sign in With Google" onPress={()=> signInWithGoogleAsync() }></Button>
+  </View>
   }
 }
+
+
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff',
-  },
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
